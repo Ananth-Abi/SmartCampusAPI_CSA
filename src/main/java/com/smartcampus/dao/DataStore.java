@@ -11,14 +11,14 @@ import java.util.Map;
 
 public class DataStore {
 
-    // Single shared instance (static = shared across all requests)
+    // Map for each model
     public static final Map<String, Room> rooms = new HashMap<>();
     public static final Map<String, Sensor> sensors = new HashMap<>();
     public static final Map<String, List<SensorReading>> sensorReadings = new HashMap<>();
 
-    // Initialize with sample data
+    // Initialize with the sample data
     static {
-        // Sample Rooms
+        // Instantiate sample rooms
         Room r1 = new Room("LIB-301", "Library Quiet Study", 50);
         Room r2 = new Room("LAB-101", "Computer Lab", 30);
         Room r3 = new Room("HALL-A", "Main Hall", 200);
@@ -26,7 +26,7 @@ public class DataStore {
         rooms.put(r2.getId(), r2);
         rooms.put(r3.getId(), r3);
 
-        // Sample Sensors
+        // Instantiate sample sensors
         Sensor s1 = new Sensor("TEMP-001", "Temperature", "ACTIVE", 22.5, "LIB-301");
         Sensor s2 = new Sensor("CO2-001", "CO2", "ACTIVE", 400.0, "LAB-101");
         Sensor s3 = new Sensor("OCC-001", "Occupancy", "MAINTENANCE", 0.0, "HALL-A");
