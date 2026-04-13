@@ -8,6 +8,7 @@ import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+// Logs all incoming requests and responses for observability
 @Provider
 public class LoggingFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
