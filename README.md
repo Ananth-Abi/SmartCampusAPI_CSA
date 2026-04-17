@@ -245,7 +245,7 @@ The pattern also enables **context injection** — the parent passes `sensorId` 
 
 ---
 
-### Part 5.2 — Why HTTP 422 is More Semantically Accurate than 404
+### Part 5.1 — Why HTTP 422 is More Semantically Accurate than 404
 
 **HTTP 404 Not Found** signals that the target URL does not exist on the server. **HTTP 422 Unprocessable Entity** signals that the URL is valid and the JSON is well-formed, but the server cannot process the request due to a **semantic error inside the payload**.
 
@@ -253,7 +253,7 @@ When a client posts a new sensor with a `roomId` referencing a room that does no
 
 ---
 
-### Part 5.4 — Cybersecurity Risks of Exposing Stack Traces
+### Part 5.2 — Cybersecurity Risks of Exposing Stack Traces
 
 Exposing Java stack traces to external consumers is a serious **information disclosure vulnerability** for four reasons.
 
@@ -263,7 +263,7 @@ The `GlobalExceptionMapper<Throwable>` in this project resolves this by intercep
 
 ---
 
-### Part 5.5 — Why JAX-RS Filters Are Superior to Manual Logging
+### Part 5.3 — Why JAX-RS Filters Are Superior to Manual Logging
 
 Inserting `Logger.info()` manually into every resource method violates the **DRY (Don't Repeat Yourself)** principle and creates a maintenance burden that grows with every new endpoint added to the API.
 
