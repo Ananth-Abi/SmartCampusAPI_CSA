@@ -4,6 +4,18 @@ A RESTful API built with JAX-RS (Jersey) for managing campus Rooms and Sensors a
 
 ---
 
+## Student Information
+
+| Field | Details |
+|-------|---------|
+| **Name** | Abinash Ananth |
+| **IIT ID** | 20231770 |
+| **UOW ID** | w2120654 |
+| **Module** | 5COSC022W — Client-Server Architectures |
+| **University** | University of Westminster |
+
+---
+
 ## API Overview
 
 This API manages three core resources:
@@ -128,16 +140,12 @@ curl -X GET http://localhost:8080/SmartCampusAPI/api/v1/rooms -H "Accept: applic
 
 ### 3. Create a New Room
 ```bash
-curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/rooms \
-  -H "Content-Type: application/json" \
-  -d '{"id":"ROOM-NEW","name":"New Lecture Hall","capacity":100}'
+curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/rooms -H "Content-Type: application/json" -d "{\"id\":\"ROOM-NEW\",\"name\":\"New Lecture Hall\",\"capacity\":100}"
 ```
 
 ### 4. Register a New Sensor
 ```bash
-curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors \
-  -H "Content-Type: application/json" \
-  -d '{"id":"TEMP-999","type":"Temperature","status":"ACTIVE","currentValue":20.0,"roomId":"LIB-301"}'
+curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors -H "Content-Type: application/json" -d "{\"id\":\"TEMP-999\",\"type\":\"Temperature\",\"status\":\"ACTIVE\",\"currentValue\":20.0,\"roomId\":\"LIB-301\"}"
 ```
 
 ### 5. Get Filtered Sensors by Type
@@ -147,9 +155,7 @@ curl -X GET "http://localhost:8080/SmartCampusAPI/api/v1/sensors?type=CO2" -H "A
 
 ### 6. Add a Sensor Reading
 ```bash
-curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors/TEMP-001/readings \
-  -H "Content-Type: application/json" \
-  -d '{"value":24.5}'
+curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors/TEMP-001/readings -H "Content-Type: application/json" -d "{\"value\":24.5}"
 ```
 
 ### 7. Delete a Room with Sensors (expect 409 error)
