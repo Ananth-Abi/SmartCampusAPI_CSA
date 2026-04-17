@@ -74,8 +74,8 @@ SmartCampusAPI/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/SmartCampusAPI.git
-cd SmartCampusAPI
+git clone https://github.com/Ananth-Abi/SmartCampusAPI_CSA.git
+cd SmartCampusAPI_CSA
 ```
 
 2. **Build the project**
