@@ -132,35 +132,103 @@ http://localhost:8080/SmartCampusAPI/api/v1
 ```bash
 curl -X GET http://localhost:8080/SmartCampusAPI/api/v1 -H "Accept: application/json"
 ```
+Expected Response (200 OK):
+```json
+{
+    "contact": "admin@smartcampus.edu",
+    "description": "A RESTful API for managing campus rooms and sensors.",
+    "name": "Smart Campus Sensor & Room Management API",
+    "resources": {
+        "rooms": "/api/v1/rooms",
+        "sensors": "/api/v1/sensors"
+    },
+    "version": "1.0"
+}
+```
 
 ### 2. Get All Rooms
 ```bash
 curl -X GET http://localhost:8080/SmartCampusAPI/api/v1/rooms -H "Accept: application/json"
+```
+Expected Response (200 OK):
+```json
+[
+    {"id": "LIB-301", "name": "Library Quiet Study", "capacity": 50, "sensorIds": ["TEMP-001"]},
+    {"id": "LAB-101", "name": "Computer Lab", "capacity": 30, "sensorIds": ["CO2-001"]},
+    {"id": "HALL-A", "name": "Main Hall", "capacity": 200, "sensorIds": ["OCC-001"]}
+]
 ```
 
 ### 3. Create a New Room
 ```bash
 curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/rooms -H "Content-Type: application/json" -d "{\"id\":\"ROOM-NEW\",\"name\":\"New Lecture Hall\",\"capacity\":100}"
 ```
+Expected Response (201 Created):
+```json
+{
+    "id": "ROOM-NEW",
+    "name": "New Lecture Hall",
+    "capacity": 100,
+    "sensorIds": []
+}
+```
 
 ### 4. Register a New Sensor
 ```bash
 curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors -H "Content-Type: application/json" -d "{\"id\":\"TEMP-999\",\"type\":\"Temperature\",\"status\":\"ACTIVE\",\"currentValue\":20.0,\"roomId\":\"LIB-301\"}"
+```
+Expected Response (201 Created):
+```json
+{
+    "id": "TEMP-999",
+    "type": "Temperature",
+    "status": "ACTIVE",
+    "currentValue": 20.0,
+    "roomId": "LIB-301"
+}
 ```
 
 ### 5. Get Filtered Sensors by Type
 ```bash
 curl -X GET "http://localhost:8080/SmartCampusAPI/api/v1/sensors?type=CO2" -H "Accept: application/json"
 ```
+Expected Response (200 OK):
+```json
+[
+    {
+        "id": "CO2-001",
+        "type": "CO2",
+        "status": "ACTIVE",
+        "currentValue": 400.0,
+        "roomId": "LAB-101"
+    }
+]
+```
 
 ### 6. Add a Sensor Reading
 ```bash
 curl -X POST http://localhost:8080/SmartCampusAPI/api/v1/sensors/TEMP-001/readings -H "Content-Type: application/json" -d "{\"value\":24.5}"
 ```
+Expected Response (201 Created):
+```json
+{
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "timestamp": 1744900000000,
+    "value": 24.5
+}
+```
 
-### 7. Delete a Room with Sensors (expect 409 error)
+### 7. Delete a Room with Sensors (409 Conflict)
 ```bash
 curl -X DELETE http://localhost:8080/SmartCampusAPI/api/v1/rooms/LIB-301 -H "Accept: application/json"
+```
+Expected Response (409 Conflict):
+```json
+{
+    "errorMessage": "Cannot delete room 'LIB-301'. It still has 1 active sensor(s) assigned to it.",
+    "errorCode": 409,
+    "documentation": "https://smartcampus.edu/api/docs/errors"
+}
 ```
 
 ---
@@ -205,7 +273,7 @@ Returning only **IDs** produces a lightweight response but introduces the **N+1 
 
 Returning **full objects** eliminates extra round trips at the cost of a larger initial payload. For the Smart Campus system where facility managers need complete room details immediately, returning full objects is the more practical choice — the bandwidth overhead is justified by the reduction in total HTTP calls.
 
-For very large datasets, combining full objects with **pagination** (`?page=1&size=20`) or **sparse fieldsets** (`?fields=id,name`) would provide the best balance between bandwidth efficiency and usability.
+For very large datasets, combining full objects with **pagination** (`?page=1&size=20`) or **sparse fieldsets** (`?fields=id,name`) would provide the best balance between bandwidth efficiency and usability, though these were outside the scope of this implementation.
 
 ---
 
@@ -269,4 +337,4 @@ Inserting `Logger.info()` manually into every resource method violates the **DRY
 
 The `LoggingFilter` in this project implements both `ContainerRequestFilter` and `ContainerResponseFilter`, registering once with `@Provider` so the Jersey runtime automatically applies it to every HTTP interaction — logging the method, URI and response status code universally without any resource method needing to participate.
 
-Three key advantages: **consistency** — no risk of missing a newly added endpoint; **centralised maintenance** — one class to update if log format changes; **framework-level coverage** — filters capture events even when methods are never reached, such as when a 415 rejection occurs before the method is invoked, which manual in-method logging would completely miss. 
+Three key advantages: **consistency** — no risk of missing a newly added endpoint; **centralised maintenance** — one class to update if log format changes; **framework-level coverage** — filters capture events even when methods are never reached, such as when a 415 rejection occurs before the method is invoked, which manual in-method logging would completely miss. This approach mirrors **Aspect-Oriented Programming**, keeping cross-cutting concerns entirely separate from core business logic.
